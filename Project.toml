@@ -1,0 +1,17 @@
+name = "Slanter"
+uuid = "1cad5224-2ad1-4081-af24-4feffd23c4f4"
+authors = ["Oren Ben-Kiki <oren@ben-kiki.org>"]
+version = "0.1.0"
+
+[deps]
+Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+
+[compat]
+Clustering = "0.15.8"
+LinearAlgebra = "1.11.0"
+Statistics = "1.11.1"
+StatsBase = "0.34.5"
+julia = "1.11"
