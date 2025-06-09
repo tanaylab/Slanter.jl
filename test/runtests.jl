@@ -111,6 +111,6 @@ end
 
     rows_oclust = oclust(rows_distances, order = rows_rclust.order)
     cols_oclust = oclust(cols_distances, order = cols_rclust.order)
-    @test rows_oclust.order == collect(1:n_rows)
-    @test cols_oclust.order == collect(1:n_cols)
+    @test rows_oclust.order === rows_rclust.order
+    @test cols_oclust.order === cols_rclust.order
 end

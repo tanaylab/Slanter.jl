@@ -357,15 +357,16 @@ Hierarchically cluster ordered data.
 Given a distance matrix for sorted objects, compute a hierarchical clustering preserving this order. That is, this is
 similar to `hclust` with the constraint that the result's order is always `1:N`.
 
-If an `order` is specified, assumes that the data will be re-ordered by this order. That is, the indices in the returned
-clustering object will refer to the post-reorder data locations, **not** to the current data locations.
+If an `order` is specified, assumes that the data will be re-ordered by this order.
+This will be the `order` field of the returned `Hclust` and the merge indices will refer to the
+current data locations. **This is different from the behavior of the R method**.
 
-Currently, the only methods supported are `ward.D` and `ward.D2`.
+Currently, the only methods supported are `:ward` and `:ward_presquared`.
 
 # Parameters
 
   - `distances`: A distance matrix.
-  - `method`: The clustering method to use (only `ward.D` and `ward.D2` are supported).
+  - `method`: The clustering method to use (only `:ward` and `:ward_presquared` are supported).
   - `order`: If specified, assume the data will be re-ordered by this order.
   - `members`: Optionally, the number of members for each row/column of the distances (by default, one each).
 
@@ -375,24 +376,27 @@ A clustering object (similar to R's hclust).
 """
 function oclust(
     distances::AbstractMatrix{<:Real};
-    method::AbstractString = "ward.D2",
+    method::Symbol = :ward,
     order::Union{AbstractVector{<:Integer}, Nothing} = nothing,
     members::Union{AbstractVector{<:Integer}, Nothing} = nothing,
 )::Hclust
     @assert size(distances, 1) == size(distances, 2)
     entities_count = size(distances, 1)
 
-    if method == "ward.D2"
+    if method == :ward
         distances = distances .* distances
         sqrt_height = true
     else
-        @assert method in ("ward.D", "ward.D2")  # UNTESTED
+        @assert method in (:ward, :ward_presquared)  # UNTESTED
         sqrt_height = false  # UNTESTED
     end
 
-    if !isnothing(order)
+    if isnothing(order)
+        groups = collect(1:entities_count) .* -1  # UNTESTED
+    else
         @assert length(order) == entities_count
         distances = distances[order, order]
+        groups = order .* -1
     end
 
     # Set diagonal to infinity
@@ -403,7 +407,6 @@ function oclust(
     merges = zeros(Int, entities_count - 1, 2)
     heights = zeros(entities_count - 1)
     merged_height = zeros(entities_count)
-    groups = collect(1:entities_count) .* -1
 
     if isnothing(members)
         members = ones(Int, entities_count)
@@ -462,7 +465,7 @@ function oclust(
         distances[merged_indices, :] .= repeat(merged_distance', length(merged_indices), 1)
     end
 
-    return Hclust(merges, heights, collect(1:entities_count), Symbol(method))
+    return Hclust(merges, heights, order, method)
 end
 
 end  # module

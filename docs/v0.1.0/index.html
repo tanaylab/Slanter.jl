@@ -1,5 +1,160 @@
+
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Slanter · Slanter.jl v0.1.0</title><meta name="title" content="Slanter · Slanter.jl v0.1.0"/><meta property="og:title" content="Slanter · Slanter.jl v0.1.0"/><meta property="twitter:title" content="Slanter · Slanter.jl v0.1.0"/><meta name="description" content="Documentation for Slanter.jl v0.1.0."/><meta property="og:description" content="Documentation for Slanter.jl v0.1.0."/><meta property="twitter:description" content="Documentation for Slanter.jl v0.1.0."/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="index.html">Slanter.jl v0.1.0</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li class="is-active"><a class="tocitem" href="index.html">Slanter</a><ul class="internal"><li class="toplevel"><a class="tocitem" href="#Index"><span>Index</span></a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href="index.html">Slanter</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="index.html">Slanter</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/tanaylab/Slanter.jl/blob/main{path}?plain=1#L{line}" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Slanter"><a class="docs-heading-anchor" href="#Slanter">Slanter</a><a id="Slanter-1"></a><a class="docs-heading-anchor-permalink" href="#Slanter" title="Permalink"></a></h1><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="Slanter" href="#Slanter"><code>Slanter</code></a> — <span class="docstring-category">Module</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><p>Reorder matrices rows and columns to move high values close to the diagonal.</p></div></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="Slanter.slanted_orders" href="#Slanter.slanted_orders"><code>Slanter.slanted_orders</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">function slanted_orders(
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Slanter · Slanter.jl v0.1.0
+</title>
+<meta name="title" content="Slanter · Slanter.jl v0.1.0"/>
+<meta property="og:title" content="Slanter · Slanter.jl v0.1.0"/>
+<meta property="twitter:title" content="Slanter · Slanter.jl v0.1.0"/>
+<meta name="description" content="Documentation for Slanter.jl v0.1.0."/>
+<meta property="og:description" content="Documentation for Slanter.jl v0.1.0."/>
+<meta property="twitter:description" content="Documentation for Slanter.jl v0.1.0."/>
+<script data-outdated-warner src="assets/warner.js">
+</script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/>
+<script>documenterBaseURL="."
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js">
+</script>
+<script src="search_index.js">
+</script>
+<script src="siteinfo.js">
+</script>
+<script src="../versions.js">
+</script>
+<link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/>
+<link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/>
+<link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/>
+<link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/>
+<link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/>
+<link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/>
+<script src="assets/themeswap.js">
+</script>
+</head>
+<body>
+<div id="documenter">
+<nav class="docs-sidebar">
+<div class="docs-package-name">
+<span class="docs-autofit">
+<a href="index.html">Slanter.jl v0.1.0
+</a>
+</span>
+</div>
+<button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)
+</button>
+<ul class="docs-menu">
+<li class="is-active">
+<a class="tocitem" href="index.html">Slanter
+</a>
+<ul class="internal">
+<li class="toplevel">
+<a class="tocitem" href="#Index">
+<span>Index
+</span>
+</a>
+</li>
+</ul>
+</li>
+</ul>
+<div class="docs-version-selector field has-addons">
+<div class="control">
+<span class="docs-label button is-static is-size-7">Version
+</span>
+</div>
+<div class="docs-selector control is-expanded">
+<div class="select is-fullwidth is-size-7">
+<select id="documenter-version-selector">
+</select>
+</div>
+</div>
+</div>
+</nav>
+<div class="docs-main">
+<header class="docs-navbar">
+<a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#">
+</a>
+<nav class="breadcrumb">
+<ul class="is-hidden-mobile">
+<li class="is-active">
+<a href="index.html">Slanter
+</a>
+</li>
+</ul>
+<ul class="is-hidden-tablet">
+<li class="is-active">
+<a href="index.html">Slanter
+</a>
+</li>
+</ul>
+</nav>
+<div class="docs-right">
+<a class="docs-navbar-link" href="https://github.com/tanaylab/Slanter.jl/blob/main{path}?plain=1#L{line}" title="View the repository on GitHub">
+<span class="docs-icon fa-brands">
+</span>
+<span class="docs-label is-hidden-touch">GitHub
+</span>
+</a>
+<a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings">
+</a>
+<a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings">
+</a>
+</div>
+</header>
+<article class="content" id="documenter-page">
+<h1 id="Slanter">
+<a class="docs-heading-anchor" href="#Slanter">Slanter
+</a>
+<a id="Slanter-1">
+</a>
+<a class="docs-heading-anchor-permalink" href="#Slanter" title="Permalink">
+</a>
+</h1>
+<article class="docstring">
+<header>
+<a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring">
+</a>
+<a class="docstring-binding" id="Slanter" href="#Slanter">
+<code>Slanter
+</code>
+</a> — 
+<span class="docstring-category">Module
+</span>
+<span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring">
+</span>
+</header>
+<section>
+<div>
+<p>Reorder matrices rows and columns to move high values close to the diagonal.
+</p>
+</div>
+</section>
+</article>
+<article class="docstring">
+<header>
+<a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring">
+</a>
+<a class="docstring-binding" id="Slanter.slanted_orders" href="#Slanter.slanted_orders">
+<code>Slanter.slanted_orders
+</code>
+</a> — 
+<span class="docstring-category">Function
+</span>
+<span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring">
+</span>
+</header>
+<section>
+<div>
+<pre>
+<code class="language-julia hljs">function slanted_orders(
     data::AbstractMatrix{&lt;:Real};
     order_rows::Bool=true,
     order_cols::Bool=true,
@@ -7,7 +162,83 @@
     same_order::Bool=false,
     discount_outliers::Bool=true,
     max_spin_count::Integer=10
-)::Tuple{AbstractVector{&lt;:Integer}, AbstractVector{&lt;:Integer}}</code></pre><p>Compute rows and columns orders which move high values close to the diagonal.</p><p>For a matrix expressing the cross-similarity between two (possibly different) sets of entities, this produces better results than clustering. This is because clustering does not care about the order of each two sub-partitions. That is, clustering is as happy with <code>((2, 1), (4, 3))</code> as it is with the more sensible <code>((1, 2), (3, 4))</code>. As a result, visualizations of similarities using naive clustering can be misleading.</p><p>This situation is worse in Python or R than it is in Julia, which mercifully provides the <code>:barjoseph</code> method to reorder the branches. Still, the method here may be &quot;more suitable&quot; in specific circumstances (when the data depicts a clear gradient).</p><p><strong>Parameters</strong></p><ul><li><code>data</code>: A rectangular matrix containing non-negative values (may be negative if <code>squared_order</code>).</li><li><code>order_rows</code>: Whether to reorder the rows.</li><li><code>order_cols</code>: Whether to reorder the columns.</li><li><code>squared_order</code>: Whether to reorder to minimize the l2 norm (otherwise minimizes the l1 norm).</li><li><code>same_order</code>: Whether to apply the same order to both rows and columns.</li><li><code>discount_outliers</code>: Whether to do a final order phase discounting outlier values far from the diagonal.</li><li><code>max_spin_count</code>: How many times to retry improving the solution before giving up.</li></ul><p><strong>Returns</strong></p><p>A tuple with two vectors, which contain the order of the rows and the columns.</p></div></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="Slanter.slanted_reorder" href="#Slanter.slanted_reorder"><code>Slanter.slanted_reorder</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">slanted_reorder(
+)::Tuple{AbstractVector{&lt;:Integer}, AbstractVector{&lt;:Integer}}
+</code>
+</pre>
+<p>Compute rows and columns orders which move high values close to the diagonal.
+</p>
+<p>For a matrix expressing the cross-similarity between two (possibly different) sets of entities, this produces better results than clustering. This is because clustering does not care about the order of each two sub-partitions. That is, clustering is as happy with 
+<code>((2, 1), (4, 3))
+</code> as it is with the more sensible 
+<code>((1, 2), (3, 4))
+</code>. As a result, visualizations of similarities using naive clustering can be misleading.
+</p>
+<p>This situation is worse in Python or R than it is in Julia, which mercifully provides the 
+<code>:barjoseph
+</code> method to reorder the branches. Still, the method here may be &quot;more suitable&quot; in specific circumstances (when the data depicts a clear gradient).
+</p>
+<p>
+<strong>Parameters
+</strong>
+</p>
+<ul>
+<li>
+<code>data
+</code>: A rectangular matrix containing non-negative values (may be negative if 
+<code>squared_order
+</code>).
+</li>
+<li>
+<code>order_rows
+</code>: Whether to reorder the rows.
+</li>
+<li>
+<code>order_cols
+</code>: Whether to reorder the columns.
+</li>
+<li>
+<code>squared_order
+</code>: Whether to reorder to minimize the l2 norm (otherwise minimizes the l1 norm).
+</li>
+<li>
+<code>same_order
+</code>: Whether to apply the same order to both rows and columns.
+</li>
+<li>
+<code>discount_outliers
+</code>: Whether to do a final order phase discounting outlier values far from the diagonal.
+</li>
+<li>
+<code>max_spin_count
+</code>: How many times to retry improving the solution before giving up.
+</li>
+</ul>
+<p>
+<strong>Returns
+</strong>
+</p>
+<p>A tuple with two vectors, which contain the order of the rows and the columns.
+</p>
+</div>
+</section>
+</article>
+<article class="docstring">
+<header>
+<a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring">
+</a>
+<a class="docstring-binding" id="Slanter.slanted_reorder" href="#Slanter.slanted_reorder">
+<code>Slanter.slanted_reorder
+</code>
+</a> — 
+<span class="docstring-category">Function
+</span>
+<span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring">
+</span>
+</header>
+<section>
+<div>
+<pre>
+<code class="language-julia hljs">slanted_reorder(
     data::AbstractMatrix{T};
     order_data::Union{AbstractMatrix{&lt;:Real}, Nothing}=nothing,
     order_rows::Bool=true,
@@ -15,4 +246,277 @@
     squared_order::Bool=true,
     same_order::Bool=false,
     discount_outliers::Bool=true
-)::AbstractMatrix{T} where {T&lt;:Real}</code></pre><p>Reorder data rows and columns to move high values close to the diagonal.</p><p>Given a matrix expressing the cross-similarity between two (possibly different) sets of entities, this uses <a href="index.html#Slanter.slanted_orders"><code>slanted_orders</code></a> to compute the &quot;best&quot; order for visualizing the matrix, then returns the reordered data.</p><p><strong>Parameters</strong></p><ul><li><code>data</code>: A rectangular matrix to reorder, of non-negative values (unless <code>order_data</code> is specified, or <code>squared_order</code>)).</li><li><code>order_data</code>: An optional matrix of non-negative values of the same size to use for computing the orders (may be negative if <code>squared_order</code>).</li><li><code>order_rows</code>: Whether to reorder the rows.</li><li><code>order_cols</code>: Whether to reorder the columns.</li><li><code>squared_order</code>: Whether to reorder to minimize the l2 norm (otherwise minimizes the l1 norm).</li><li><code>same_order</code>: Whether to apply the same order to both rows and columns.</li><li><code>discount_outliers</code>: Whether to do a final order phase discounting outlier values far from the diagonal.</li></ul><p><strong>Returns</strong></p><p>A matrix of the same shape whose rows and columns are a permutation of the input.</p></div></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="Slanter.reorder_hclust" href="#Slanter.reorder_hclust"><code>Slanter.reorder_hclust</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">reorder_hclust(clusters, order)</code></pre><p>Given a clustering of some data, and some ideal order we&#39;d like to use to visualize it, reorder (but do not modify) the clustering to be as consistent as possible with this ideal order.</p><p><strong>Parameters</strong></p><ul><li><code>clusters</code>: The existing clustering of the data.</li><li><code>order</code>: The ideal order we&#39;d like to see the data in.</li></ul><p><strong>Returns</strong></p><p>A reordered clustering which is consistent, wherever possible, with the ideal order.</p></div></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="Slanter.oclust" href="#Slanter.oclust"><code>Slanter.oclust</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">oclust(distances; method=&quot;ward.D2&quot;, order=nothing, members=nothing)</code></pre><p>Hierarchically cluster ordered data.</p><p>Given a distance matrix for sorted objects, compute a hierarchical clustering preserving this order. That is, this is similar to <code>hclust</code> with the constraint that the result&#39;s order is always <code>1:N</code>.</p><p>If an <code>order</code> is specified, assumes that the data will be re-ordered by this order. That is, the indices in the returned clustering object will refer to the post-reorder data locations, <strong>not</strong> to the current data locations.</p><p>Currently, the only methods supported are <code>ward.D</code> and <code>ward.D2</code>.</p><p><strong>Parameters</strong></p><ul><li><code>distances</code>: A distance matrix.</li><li><code>method</code>: The clustering method to use (only <code>ward.D</code> and <code>ward.D2</code> are supported).</li><li><code>order</code>: If specified, assume the data will be re-ordered by this order.</li><li><code>members</code>: Optionally, the number of members for each row/column of the distances (by default, one each).</li></ul><p><strong>Returns</strong></p><p>A clustering object (similar to R&#39;s hclust).</p></div></section></article><h1 id="Index"><a class="docs-heading-anchor" href="#Index">Index</a><a id="Index-1"></a><a class="docs-heading-anchor-permalink" href="#Index" title="Permalink"></a></h1><ul><li><a href="index.html#Slanter"><code>Slanter</code></a></li><li><a href="index.html#Slanter.oclust"><code>Slanter.oclust</code></a></li><li><a href="index.html#Slanter.reorder_hclust"><code>Slanter.reorder_hclust</code></a></li><li><a href="index.html#Slanter.slanted_orders"><code>Slanter.slanted_orders</code></a></li><li><a href="index.html#Slanter.slanted_reorder"><code>Slanter.slanted_reorder</code></a></li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.11.0 on <span class="colophon-date" title="Wednesday 14 May 2025 17:18">Wednesday 14 May 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+)::AbstractMatrix{T} where {T&lt;:Real}
+</code>
+</pre>
+<p>Reorder data rows and columns to move high values close to the diagonal.
+</p>
+<p>Given a matrix expressing the cross-similarity between two (possibly different) sets of entities, this uses 
+<a href="index.html#Slanter.slanted_orders">
+<code>slanted_orders
+</code>
+</a> to compute the &quot;best&quot; order for visualizing the matrix, then returns the reordered data.
+</p>
+<p>
+<strong>Parameters
+</strong>
+</p>
+<ul>
+<li>
+<code>data
+</code>: A rectangular matrix to reorder, of non-negative values (unless 
+<code>order_data
+</code> is specified, or 
+<code>squared_order
+</code>)).
+</li>
+<li>
+<code>order_data
+</code>: An optional matrix of non-negative values of the same size to use for computing the orders (may be negative if 
+<code>squared_order
+</code>).
+</li>
+<li>
+<code>order_rows
+</code>: Whether to reorder the rows.
+</li>
+<li>
+<code>order_cols
+</code>: Whether to reorder the columns.
+</li>
+<li>
+<code>squared_order
+</code>: Whether to reorder to minimize the l2 norm (otherwise minimizes the l1 norm).
+</li>
+<li>
+<code>same_order
+</code>: Whether to apply the same order to both rows and columns.
+</li>
+<li>
+<code>discount_outliers
+</code>: Whether to do a final order phase discounting outlier values far from the diagonal.
+</li>
+</ul>
+<p>
+<strong>Returns
+</strong>
+</p>
+<p>A matrix of the same shape whose rows and columns are a permutation of the input.
+</p>
+</div>
+</section>
+</article>
+<article class="docstring">
+<header>
+<a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring">
+</a>
+<a class="docstring-binding" id="Slanter.reorder_hclust" href="#Slanter.reorder_hclust">
+<code>Slanter.reorder_hclust
+</code>
+</a> — 
+<span class="docstring-category">Function
+</span>
+<span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring">
+</span>
+</header>
+<section>
+<div>
+<pre>
+<code class="language-julia hljs">reorder_hclust(clusters, order)
+</code>
+</pre>
+<p>Given a clustering of some data, and some ideal order we&#39;d like to use to visualize it, reorder (but do not modify) the clustering to be as consistent as possible with this ideal order.
+</p>
+<p>
+<strong>Parameters
+</strong>
+</p>
+<ul>
+<li>
+<code>clusters
+</code>: The existing clustering of the data.
+</li>
+<li>
+<code>order
+</code>: The ideal order we&#39;d like to see the data in.
+</li>
+</ul>
+<p>
+<strong>Returns
+</strong>
+</p>
+<p>A reordered clustering which is consistent, wherever possible, with the ideal order.
+</p>
+</div>
+</section>
+</article>
+<article class="docstring">
+<header>
+<a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring">
+</a>
+<a class="docstring-binding" id="Slanter.oclust" href="#Slanter.oclust">
+<code>Slanter.oclust
+</code>
+</a> — 
+<span class="docstring-category">Function
+</span>
+<span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring">
+</span>
+</header>
+<section>
+<div>
+<pre>
+<code class="language-julia hljs">oclust(distances; method=&quot;ward.D2&quot;, order=nothing, members=nothing)
+</code>
+</pre>
+<p>Hierarchically cluster ordered data.
+</p>
+<p>Given a distance matrix for sorted objects, compute a hierarchical clustering preserving this order. That is, this is similar to 
+<code>hclust
+</code> with the constraint that the result&#39;s order is always 
+<code>1:N
+</code>.
+</p>
+<p>If an 
+<code>order
+</code> is specified, assumes that the data will be re-ordered by this order. That is, the indices in the returned clustering object will refer to the post-reorder data locations, 
+<strong>not
+</strong> to the current data locations.
+</p>
+<p>Currently, the only methods supported are 
+<code>ward.D
+</code> and 
+<code>ward.D2
+</code>.
+</p>
+<p>
+<strong>Parameters
+</strong>
+</p>
+<ul>
+<li>
+<code>distances
+</code>: A distance matrix.
+</li>
+<li>
+<code>method
+</code>: The clustering method to use (only 
+<code>ward.D
+</code> and 
+<code>ward.D2
+</code> are supported).
+</li>
+<li>
+<code>order
+</code>: If specified, assume the data will be re-ordered by this order.
+</li>
+<li>
+<code>members
+</code>: Optionally, the number of members for each row/column of the distances (by default, one each).
+</li>
+</ul>
+<p>
+<strong>Returns
+</strong>
+</p>
+<p>A clustering object (similar to R&#39;s hclust).
+</p>
+</div>
+</section>
+</article>
+<h1 id="Index">
+<a class="docs-heading-anchor" href="#Index">Index
+</a>
+<a id="Index-1">
+</a>
+<a class="docs-heading-anchor-permalink" href="#Index" title="Permalink">
+</a>
+</h1>
+<ul>
+<li>
+<a href="index.html#Slanter">
+<code>Slanter
+</code>
+</a>
+</li>
+<li>
+<a href="index.html#Slanter.oclust">
+<code>Slanter.oclust
+</code>
+</a>
+</li>
+<li>
+<a href="index.html#Slanter.reorder_hclust">
+<code>Slanter.reorder_hclust
+</code>
+</a>
+</li>
+<li>
+<a href="index.html#Slanter.slanted_orders">
+<code>Slanter.slanted_orders
+</code>
+</a>
+</li>
+<li>
+<a href="index.html#Slanter.slanted_reorder">
+<code>Slanter.slanted_reorder
+</code>
+</a>
+</li>
+</ul>
+</article>
+<nav class="docs-footer">
+<p class="footer-message">Powered by 
+<a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl
+</a> and the 
+<a href="https://julialang.org/">Julia Programming Language
+</a>.
+</p>
+</nav>
+</div>
+<div class="modal" id="documenter-settings">
+<div class="modal-background">
+</div>
+<div class="modal-card">
+<header class="modal-card-head">
+<p class="modal-card-title">Settings
+</p>
+<button class="delete">
+</button>
+</header>
+<section class="modal-card-body">
+<p>
+<label class="label">Theme
+</label>
+<div class="select">
+<select id="documenter-themepicker">
+<option value="auto">Automatic (OS)
+</option>
+<option value="documenter-light">documenter-light
+</option>
+<option value="documenter-dark">documenter-dark
+</option>
+<option value="catppuccin-latte">catppuccin-latte
+</option>
+<option value="catppuccin-frappe">catppuccin-frappe
+</option>
+<option value="catppuccin-macchiato">catppuccin-macchiato
+</option>
+<option value="catppuccin-mocha">catppuccin-mocha
+</option>
+</select>
+</div>
+</p>
+<hr/>
+<p>This document was generated with 
+<a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl
+</a> version 1.11.4. Using Julia version 1.11.5.
+</p>
+</section>
+<footer class="modal-card-foot">
+</footer>
+</div>
+</div>
+</div>
+</body>
+</html>
