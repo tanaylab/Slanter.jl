@@ -392,11 +392,10 @@ function oclust(
     end
 
     if isnothing(order)
-        groups = collect(1:entities_count) .* -1  # UNTESTED
+        order = collect(1:entities_count)  # UNTESTED
     else
         @assert length(order) == entities_count
         distances = distances[order, order]
-        groups = order .* -1
     end
 
     # Set diagonal to infinity
@@ -407,6 +406,7 @@ function oclust(
     merges = zeros(Int, entities_count - 1, 2)
     heights = zeros(entities_count - 1)
     merged_height = zeros(entities_count)
+    groups = order .* -1
 
     if isnothing(members)
         members = ones(Int, entities_count)
