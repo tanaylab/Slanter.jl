@@ -135,6 +135,22 @@
 <div>
 <p>Reorder matrices rows and columns to move high values close to the diagonal.
 </p>
+<div class="admonition is-info" id="Note-f00d4cffb9b461a4">
+<header class="admonition-header">Note
+<a class="admonition-anchor" href="#Note-f00d4cffb9b461a4" title="Permalink">
+</a>
+</header>
+<div class="admonition-body">
+<p>Instead of providing the limited 
+<code>oclust
+</code> (like the R version), this includes 
+<a href="index.html#Slanter.EnhancedHclust.ehclust">
+<code>ehclust
+</code>
+</a>, an extended version of [hclust]*https://github.com/JuliaStats/Clustering.jl/blob/master/src/hclust.jl).
+</p>
+</div>
+</div>
 </div>
 </section>
 </article>
@@ -354,8 +370,28 @@
 <header>
 <a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring">
 </a>
-<a class="docstring-binding" id="Slanter.oclust" href="#Slanter.oclust">
-<code>Slanter.oclust
+<a class="docstring-binding" id="Slanter.EnhancedHclust" href="#Slanter.EnhancedHclust">
+<code>Slanter.EnhancedHclust
+</code>
+</a> — 
+<span class="docstring-category">Module
+</span>
+<span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring">
+</span>
+</header>
+<section>
+<div>
+<p>Enhancements of [hclust]*https://github.com/JuliaStats/Clustering.jl/blob/master/src/hclust.jl)
+</p>
+</div>
+</section>
+</article>
+<article class="docstring">
+<header>
+<a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring">
+</a>
+<a class="docstring-binding" id="Slanter.EnhancedHclust.ehclust" href="#Slanter.EnhancedHclust.ehclust">
+<code>Slanter.EnhancedHclust.ehclust
 </code>
 </a> — 
 <span class="docstring-category">Function
@@ -366,61 +402,94 @@
 <section>
 <div>
 <pre>
-<code class="language-julia hljs">oclust(distances; method=&quot;ward.D2&quot;, order=nothing, members=nothing)
+<code class="language-julia hljs">ehclust(d::AbstractMatrix; [linkage], [uplo], [branchorder], [order]) -&gt; Hclust
 </code>
 </pre>
-<p>Hierarchically cluster ordered data.
-</p>
-<p>Given a distance matrix for sorted objects, compute a hierarchical clustering preserving this order. That is, this is similar to 
+<p>Enhanced [hclust]*https://github.com/JuliaStats/Clustering.jl/blob/master/src/hclust.jl). This is similar to 
 <code>hclust
-</code> with the constraint that the result&#39;s order is always 
-<code>1:N
-</code>.
-</p>
-<p>If an 
-<code>order
-</code> is specified, assumes that the data will be re-ordered by this order. That is, the indices in the returned clustering object will refer to the post-reorder data locations, 
-<strong>not
-</strong> to the current data locations.
-</p>
-<p>Currently, the only methods supported are 
-<code>ward.D
-</code> and 
-<code>ward.D2
-</code>.
-</p>
-<p>
-<strong>Parameters
-</strong>
+</code> with the following extensions:
 </p>
 <ul>
 <li>
-<code>distances
-</code>: A distance matrix.
+<p>If 
+<code>branchorder
+</code> is a vector of 
+<code>Real
+</code> numbers, one per leaf, then we reorder the branches so that each leaf position would be as close as possible to its 
+<code>branchorder
+</code> value. Technically we compute a center of gravity for each node and reorder the tree such that that at each branch, the left sub-tree center of gravity is to the left (lower than) the center of gravity of the right sub-tree.
+</p>
 </li>
 <li>
-<code>method
-</code>: The clustering method to use (only 
-<code>ward.D
-</code> and 
-<code>ward.D2
-</code> are supported).
-</li>
-<li>
+<p>If 
 <code>order
-</code>: If specified, assume the data will be re-ordered by this order.
-</li>
-<li>
-<code>members
-</code>: Optionally, the number of members for each row/column of the distances (by default, one each).
+</code> is specified, it must be a permutation of the 1:N leaf indices. This will be the final order of the result. If you specify an explicit 
+<code>branchorder
+</code>, this will modify the result.
+</p>
 </li>
 </ul>
-<p>
-<strong>Returns
-</strong>
-</p>
-<p>A clustering object (similar to R&#39;s hclust).
-</p>
+<pre>
+<code class="language-julia hljs">using Test
+using Distances
+
+data = rand(4, 10)
+distances = pairwise(Euclidean(), data; dims = 2)
+positions = rand(10)
+result = ehclust(distances; branchorder = positions)
+merges_data = Vector{Tuple{Int32, Float32}}(undef, 9)
+for merge_index in 1:9
+    left = result.merges[merge_index, 1]
+    if left &lt; 0
+        left_size = 1
+        left_center = positions[-left]
+    else
+        left_size, left_center = merges_data[left]
+    end
+
+    right = result.merges[merge_index, 2]
+    if right &lt; 0
+        right_size = 1
+        right_center = positions[-right]
+    else
+        right_size, right_center = merges_data[right]
+    end
+
+    @test left_center &lt;= right_center
+    merged_size = left_size + right_size
+    merged_center = (left_center * left_size + right_center * right_size) / merged_size
+    merges_data[merge_index] = (merged_size, merged_center)
+end
+
+println(&quot;OK&quot;)
+
+# output
+
+OK
+</code>
+</pre>
+<pre>
+<code class="language-julia hljs">using Test
+using Distances
+using Random
+
+data = rand(4, 10)
+distances = pairwise(Euclidean(), data; dims = 2)
+order = collect(1:10)
+shuffle!(order)
+result = ehclust(distances; order)
+@test result.order == order
+result = ehclust(distances; branchorder = :r)
+result = ehclust(distances; branchorder = :r, order)
+@test result.order != order
+
+println(&quot;OK&quot;)
+
+# output
+
+OK
+</code>
+</pre>
 </div>
 </section>
 </article>
@@ -440,8 +509,14 @@
 </a>
 </li>
 <li>
-<a href="index.html#Slanter.oclust">
-<code>Slanter.oclust
+<a href="index.html#Slanter.EnhancedHclust">
+<code>Slanter.EnhancedHclust
+</code>
+</a>
+</li>
+<li>
+<a href="index.html#Slanter.EnhancedHclust.ehclust">
+<code>Slanter.EnhancedHclust.ehclust
 </code>
 </a>
 </li>

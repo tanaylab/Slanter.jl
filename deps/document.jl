@@ -18,7 +18,7 @@ end
 
 global_logger(detect_problems)
 
-push!(LOAD_PATH, ".")
+push!(LOAD_PATH, joinpath(@__DIR__, ".."))
 
 using Slanter
 using Pkg
@@ -28,6 +28,8 @@ VERSION = PROJECT_TOML["version"]
 NAME = PROJECT_TOML["name"]
 AUTHORS = PROJECT_TOML["authors"]
 REPO = "https://github.com/tanaylab/$(NAME).jl"
+
+DocMeta.setdocmeta!(Slanter, :DocTestSetup, :(using Slanter); recursive = true)
 
 makedocs(;
     authors = join(" ", AUTHORS),

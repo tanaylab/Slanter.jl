@@ -1,9 +1,17 @@
 """
 Reorder matrices rows and columns to move high values close to the diagonal.
+
+!!! note
+
+    Instead of providing the limited `oclust` (like the R version), this includes [`ehclust`](@ref), an extended version
+    of [hclust]*https://github.com/JuliaStats/Clustering.jl/blob/master/src/hclust.jl).
 """
 module Slanter
 
-export oclust
+using Reexport
+include("enhanced_hclust.jl")
+@reexport using .EnhancedHclust
+
 export reorder_hclust
 export slanted_orders
 export slanted_reorder
@@ -332,140 +340,6 @@ function reorder_hclust(clusters::Hclust{T}, order::AbstractVector{<:Integer})::
     new_order = merges_data[merges_count][:indices]
 
     return Hclust(clusters.merges, clusters.heights, new_order, clusters.linkage)
-end
-
-# Helper function that extracts a diagonal from a matrix with a given offset.
-# Similar to R's `pracma::Diag`.
-function diag_one(matrix, offset = 1)
-    rows, cols = size(matrix)
-    if offset >= 0
-        len = min(rows, cols - offset)
-        result = [matrix[i, i + offset] for i in 1:len]
-    else
-        offset = abs(offset)  # UNTESTED
-        len = min(rows - offset, cols)  # UNTESTED
-        result = [matrix[i + offset, i] for i in 1:len]  # UNTESTED
-    end
-    return result
-end
-
-"""
-    oclust(distances; method="ward.D2", order=nothing, members=nothing)
-
-Hierarchically cluster ordered data.
-
-Given a distance matrix for sorted objects, compute a hierarchical clustering preserving this order. That is, this is
-similar to `hclust` with the constraint that the result's order is always `1:N`.
-
-If an `order` is specified, assumes that the data will be re-ordered by this order.
-This will be the `order` field of the returned `Hclust` and the merge indices will refer to the
-current data locations. **This is different from the behavior of the R method**.
-
-Currently, the only methods supported are `:ward` and `:ward_presquared`.
-
-# Parameters
-
-  - `distances`: A distance matrix.
-  - `method`: The clustering method to use (only `:ward` and `:ward_presquared` are supported).
-  - `order`: If specified, assume the data will be re-ordered by this order.
-  - `members`: Optionally, the number of members for each row/column of the distances (by default, one each).
-
-# Returns
-
-A clustering object (similar to R's hclust).
-"""
-function oclust(
-    distances::AbstractMatrix{<:Real};
-    method::Symbol = :ward,
-    order::Union{AbstractVector{<:Integer}, Nothing} = nothing,
-    members::Union{AbstractVector{<:Integer}, Nothing} = nothing,
-)::Hclust
-    @assert size(distances, 1) == size(distances, 2)
-    entities_count = size(distances, 1)
-
-    if method == :ward
-        distances = distances .* distances
-        sqrt_height = true
-    else
-        @assert method in (:ward, :ward_presquared)  # UNTESTED
-        sqrt_height = false  # UNTESTED
-    end
-
-    if isnothing(order)
-        order = collect(1:entities_count)  # UNTESTED
-    else
-        @assert length(order) == entities_count
-        distances = distances[order, order]
-    end
-
-    # Set diagonal to infinity
-    for i in 1:entities_count
-        distances[i, i] = Inf
-    end
-
-    merges = zeros(Int, entities_count - 1, 2)
-    heights = zeros(entities_count - 1)
-    merged_height = zeros(entities_count)
-    groups = order .* -1
-
-    if isnothing(members)
-        members = ones(Int, entities_count)
-    end
-
-    for merge_index in 1:(entities_count - 1)
-        # Get distances between adjacent elements
-        adjacent_distances = diag_one(distances, 1)
-
-        # Find minimum distance
-        _, low_index = findmin(adjacent_distances)
-        high_index = low_index + 1
-
-        grouped_indices = groups[[low_index, high_index]]
-
-        # Find all indices that belong to these groups
-        merged_indices = findall(in(grouped_indices), groups)
-
-        groups[merged_indices] .= merge_index
-
-        merges[merge_index, :] = grouped_indices
-
-        delta_height = adjacent_distances[low_index]
-        if sqrt_height
-            delta_height = sqrt(delta_height)
-        end
-        heights[merge_index] = maximum(merged_height[merged_indices]) + delta_height
-
-        merged_height[merged_indices] .= heights[merge_index]
-
-        a_index = merged_indices[1]
-        b_index = merged_indices[end]
-
-        a_members = members[a_index]
-        b_members = members[b_index]
-
-        members[merged_indices] .= a_members + b_members
-
-        a_b_distance_value = distances[a_index, b_index]  # d(a, b)
-        a_b_distance_scaled = members .* a_b_distance_value  # |C| * d(a, b)
-
-        @views a_c_distance_slice = distances[a_index, :] # d(a, c)
-        a_c_scale = fill(a_members, entities_count) .+ members # |A| + |C|
-        a_c_distance_scaled = a_c_distance_slice .* a_c_scale # (|A| + |C|) * d(a, c)
-
-        @views b_c_distance_slice = distances[b_index, :] # d(b, c)
-        b_c_scale = fill(b_members, entities_count) .+ members # |B| + |C|
-        b_c_distance_scaled = b_c_distance_slice .* b_c_scale # (|B| + |C|) * d(b, c)
-
-        a_b_c_scale = members .+ a_members .+ b_members  # |A| + |B| + |C|
-
-        # Ward: ( (|A| + |C|) * d(a,c) + (|B| + |C|) * d(b, c) - |C| * d(a, b) ) / ( |A| + |B| + |C| )
-        merged_distance = (a_c_distance_scaled .+ b_c_distance_scaled .- a_b_distance_scaled) ./ a_b_c_scale
-
-        distances[:, merged_indices] .= repeat(merged_distance, 1, length(merged_indices))
-        distances[merged_indices, :] .= repeat(merged_distance', length(merged_indices), 1)
-    end
-
-    return Hclust(merges, heights, order, method)
 end
 
 end  # module

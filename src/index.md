@@ -5,7 +5,8 @@ Slanter
 Slanter.slanted_orders
 Slanter.slanted_reorder
 Slanter.reorder_hclust
-Slanter.oclust
+Slanter.EnhancedHclust
+Slanter.EnhancedHclust.ehclust
 ```
 
 # Index
