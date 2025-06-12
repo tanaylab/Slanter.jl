@@ -410,25 +410,61 @@
 </code> with the following extensions:
 </p>
 <ul>
-<li>
-<p>If 
+<li>If 
 <code>branchorder
 </code> is a vector of 
 <code>Real
 </code> numbers, one per leaf, then we reorder the branches so that each leaf position would be as close as possible to its 
 <code>branchorder
 </code> value. Technically we compute a center of gravity for each node and reorder the tree such that that at each branch, the left sub-tree center of gravity is to the left (lower than) the center of gravity of the right sub-tree.
-</p>
 </li>
-<li>
-<p>If 
+<li>If 
 <code>order
-</code> is specified, it must be a permutation of the 1:N leaf indices. This will be the final order of the result. If you specify an explicit 
+</code> is specified, it must be a permutation of the 1:N leaf indices. This will be the final order of the result; that is, we constrain the tree so that each node covers a continuous range of leaves (by this order). If you specify an explicit 
 <code>branchorder
-</code>, this will modify the result.
-</p>
+</code>, this will rotate some nodes so the result will no longer be in the specified order, but the tree is still constrained as above.
+</li>
+<li>If 
+<code>groups
+</code> is a vector of strings, then we first cluster all the entries for each group together, then combine the results. This is mutually exclusive with specifying an 
+<code>order
+</code>.
+</li>
+<li>If 
+<code>groups
+</code> is a vector of integers, they are expected to cover a range 1:N. We again cluster each group separately, and then cluster the groups enforcing them to be in ascending order. Applying 
+<code>branchorder
+</code> in this case will only reorder branches inside each group, preserving the ascending order between the groups.
 </li>
 </ul>
+<p>The 
+<code>groups
+</code> and 
+<code>order
+</code> parameters are mutually exclusive.
+</p>
+<pre>
+<code class="language-julia hljs">using Test
+using Clustering
+using Distances
+
+data = rand(4, 10)
+distances = pairwise(Euclidean(), data; dims = 2)
+result = hclust(distances)
+eresult = ehclust(distances)
+@test result.order == eresult.order
+
+result = hclust(distances; linkage = :ward)
+eresult = ehclust(distances; linkage = :ward)
+@test result.order == eresult.order
+
+println(&quot;OK&quot;)
+
+# output
+
+OK
+</code>
+</pre>
 <pre>
 <code class="language-julia hljs">using Test
 using Distances
@@ -437,7 +473,7 @@ data = rand(4, 10)
 distances = pairwise(Euclidean(), data; dims = 2)
 positions = rand(10)
 result = ehclust(distances; branchorder = positions)
-merges_data = Vector{Tuple{Int32, Float32}}(undef, 9)
+merges_data = Vector{Tuple{Int, Float64}}(undef, 9)
 for merge_index in 1:9
     left = result.merges[merge_index, 1]
     if left &lt; 0
@@ -479,9 +515,61 @@ order = collect(1:10)
 shuffle!(order)
 result = ehclust(distances; order)
 @test result.order == order
-result = ehclust(distances; branchorder = :r)
 result = ehclust(distances; branchorder = :r, order)
 @test result.order != order
+
+println(&quot;OK&quot;)
+
+# output
+
+OK
+</code>
+</pre>
+<pre>
+<code class="language-julia hljs">using Test
+using Distances
+using Random
+
+data = rand(4, 10)
+distances = pairwise(Euclidean(), data; dims = 2)
+groups = [&quot;A&quot;, &quot;B&quot;][rand(1:2, 10)]
+result = ehclust(distances; groups)
+a_indices = findall(groups[result.order] .== &quot;A&quot;)
+b_indices = findall(groups[result.order] .== &quot;B&quot;)
+@assert maximum(a_indices) &lt; minimum(b_indices) || maximum(b_indices) &lt; minimum(a_indices)
+
+println(&quot;OK&quot;)
+
+# output
+
+OK
+</code>
+</pre>
+<pre>
+<code class="language-julia hljs">using Test
+using Distances
+using Random
+
+data = rand(4, 10)
+distances = pairwise(Euclidean(), data; dims = 2)
+
+groups = rand(1:2, 10)
+result = ehclust(distances; groups)
+one_indices = findall(groups[result.order] .== 1)
+two_indices = findall(groups[result.order] .== 2)
+@assert maximum(one_indices) &lt; minimum(two_indices)
+
+groups = 3 .- groups
+result = ehclust(distances; groups)
+one_indices = findall(groups[result.order] .== 1)
+two_indices = findall(groups[result.order] .== 2)
+@assert maximum(one_indices) &lt; minimum(two_indices)
+
+bresult = ehclust(distances; branchorder = :r, groups)
+@assert bresult.order != result.order
+one_indices = findall(groups[bresult.order] .== 1)
+two_indices = findall(groups[bresult.order] .== 2)
+@assert maximum(one_indices) &lt; minimum(two_indices)
 
 println(&quot;OK&quot;)
 

@@ -1,10 +1,16 @@
 using Clustering
 using Distances
+using Documenter
 using Random
 using Slanter
 using Test
 
 Random.seed!(123456)
+
+@testset "doctests" begin
+    DocMeta.setdocmeta!(Slanter, :DocTestSetup, :(using Slanter); recursive = true)
+    return doctest(Slanter; manual = false)
+end
 
 function compute_moment(matrix::AbstractMatrix{<:Real})::AbstractFloat
     n_rows, n_cols = size(matrix)
