@@ -9,24 +9,24 @@ using Clustering
 using LinearAlgebra
 
 import Clustering.assertdistancematrix
-import Clustering.AverageDistance
+import Clustering.AverageDistance  # NOLINT
 import Clustering.hclust_minimum
 import Clustering.hclust_perm
-import Clustering.HclustMerges
-import Clustering.HclustTrees
-import Clustering.MaximumDistance
+import Clustering.HclustMerges  # NOLINT
+import Clustering.HclustTrees  # NOLINT
+import Clustering.MaximumDistance  # NOLINT
 import Clustering.merge_trees!
-import Clustering.MinimalDistance
+import Clustering.MinimalDistance  # NOLINT
 import Clustering.nearest_neighbor
 import Clustering.nnodes
 import Clustering.ntrees
 import Clustering.orderbranches_barjoseph!
 import Clustering.orderbranches_r!
-import Clustering.ReducibleMetric
+import Clustering.ReducibleMetric  # NOLINT
 import Clustering.Symmetric
 import Clustering.tree_size
 import Clustering.update_distances_upon_merge!
-import Clustering.WardDistance
+import Clustering.WardDistance  # NOLINT
 
 ## Given a hierarchical cluster and some ideal positions of the leaves,
 ## reorder the branches so they will be the most compatible with these positions.
