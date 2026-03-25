@@ -247,7 +247,7 @@ function hclust_grouped(
     return ordered_clustering(dd, htre, metric, tree_in_position, position_of_tree)
 end
 
-function group_nearest_neighbor(d::AbstractMatrix, i::Integer, N::Integer, group_of_tree::Vector{Int})
+function group_nearest_neighbor(d::AbstractMatrix, i::Integer, N::Integer, group_of_tree::Vector{Int})  # UNTESTED
     (N <= 1) && return 0, NaN
 
     NNi = 0
