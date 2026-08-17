@@ -51,6 +51,72 @@ end
     @test slanted_moment <= same_moment < raw_moment
 end
 
+## The distinct labels of the entries, in the order they appear in, which has one entry per label if (and only if) each
+## label covers a contiguous range of the order.
+function labels_in_order(order::AbstractVector{<:Integer}, label_per_entry::AbstractVector)::Vector
+    labels = label_per_entry[order]
+    return labels[[true; labels[2:end] .!= labels[1:(end - 1)]]]
+end
+
+@testset "grouped_subgroups" begin
+    # Two entries in each of six subgroups, three subgroups in each of two groups. The entries of the different
+    # subgroups are identical, so clustering them without the groups interleaves the subgroups completely.
+    n_subgroups = 6
+    n_groups = 2
+    values = reshape([Float64(1 + (index - 1) % 2) + 0.01 * rand() for index in 1:(2 * n_subgroups)], 1, :)
+    distances = pairwise(Euclidean(), values; dims = 2)
+
+    # The subgroups are numbered in the opposite order of their groups - the first group holds the last subgroups - so
+    # that ordering by the subgroups alone would give the wrong answer, and only ordering by the (group, subgroup) pair
+    # gives the right one.
+    numbered_subgroups = repeat(1:n_subgroups; inner = 2)
+    numbered_groups = [subgroup <= 3 ? 2 : 1 for subgroup in numbered_subgroups]
+    named_subgroups = ["S$(index)" for index in numbered_subgroups]
+    named_groups = ["G$(index)" for index in numbered_groups]
+
+    group_index_per_subgroup = zeros(Int, n_subgroups)
+    for (group_index, subgroup_index) in zip(numbered_groups, numbered_subgroups)
+        group_index_per_subgroup[subgroup_index] = group_index
+    end
+
+    # Without the groups, the subgroups are indeed interleaved, so the tests below are not vacuous.
+    @test length(labels_in_order(ehclust(distances).order, numbered_subgroups)) > n_subgroups
+
+    for (groups_name, groups) in (("named", named_groups), ("numbered", numbered_groups)),
+        (subgroups_name, subgroups) in (("named", named_subgroups), ("numbered", numbered_subgroups))
+
+        order = ehclust(distances; groups, subgroups).order
+        println("$(groups_name) groups, $(subgroups_name) subgroups: $(order)")
+
+        # Each group, and each subgroup, covers a contiguous range of the order.
+        @test length(labels_in_order(order, numbered_groups)) == n_groups
+        @test length(labels_in_order(order, numbered_subgroups)) == n_subgroups
+
+        # A numbered level is laid out in the order of its numbers; a named one is laid out by the clustering.
+        if groups_name == "numbered"
+            @test labels_in_order(order, numbered_groups) == collect(1:n_groups)
+        end
+        if subgroups_name == "numbered"
+            for group_index in 1:n_groups
+                subgroups_of_group = filter(
+                    subgroup -> group_index_per_subgroup[subgroup] == group_index,
+                    labels_in_order(order, numbered_subgroups),
+                )
+                @test issorted(subgroups_of_group)
+            end
+        end
+    end
+
+    @test_throws AssertionError ehclust(distances; subgroups = named_subgroups)
+    # A subgroup is nested in its group, so each group may name its own subgroups the same way; these are then two
+    # different subgroups rather than one subgroup spanning both groups.
+    reused_subgroups = repeat(["A", "B", "C"]; inner = 2, outer = 2)
+    order = ehclust(distances; groups = numbered_groups, subgroups = reused_subgroups).order
+    @test length(labels_in_order(order, numbered_groups)) == n_groups
+    @test length(labels_in_order(order, numbered_subgroups)) == n_subgroups
+    @test length(labels_in_order(order, reused_subgroups)) == n_subgroups
+end
+
 @testset "reorder_hclust" begin
     n_rows = 10
     n_cols = 20
