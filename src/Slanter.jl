@@ -295,7 +295,7 @@ function reorder_hclust(clusters::Hclust{T}, order::AbstractVector{<:Integer})::
     old_of_new = order
     new_of_old = invperm(old_of_new)
 
-    merges = clusters.merges
+    merges = copy(clusters.merges)
     merges_count = size(merges, 1)
     merges_data = Vector{Dict}(undef, merges_count)
 
@@ -337,9 +337,14 @@ function reorder_hclust(clusters::Hclust{T}, order::AbstractVector{<:Integer})::
         merges_data[merge_index] = Dict(:indices => merged_indices, :center => merged_center)
     end
 
-    new_order = merges_data[merges_count][:indices]
+    # The leaves of the reordered tree, from its root. A tree of a single leaf has no merges.
+    if merges_count == 0
+        new_order = copy(clusters.order)
+    else
+        new_order = merges_data[merges_count][:indices]
+    end
 
-    return Hclust(clusters.merges, clusters.heights, new_order, clusters.linkage)
+    return Hclust(merges, copy(clusters.heights), new_order, clusters.linkage)
 end
 
 end  # module

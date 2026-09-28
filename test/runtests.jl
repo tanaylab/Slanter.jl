@@ -149,3 +149,50 @@ end
 
     @test rclust_moment < hclust_moment
 end
+
+# The leaves of a tree from its root, left subtree first, which is what the order of a valid tree must be.
+function walked_leaves(clusters::Hclust)::Vector{Int}
+    function leaves(node::Integer)::Vector{Int}
+        if node < 0
+            return [-node]
+        else
+            return vcat(leaves(clusters.merges[node, 1]), leaves(clusters.merges[node, 2]))
+        end
+    end
+    return leaves(size(clusters.merges, 1))
+end
+
+@testset "reorder_hclust!copy" begin
+    distances = [
+        0.0 1.0 5.0 6.0
+        1.0 0.0 5.0 6.0
+        5.0 5.0 0.0 1.0
+        6.0 6.0 1.0 0.0
+    ]
+    clusters = hclust(distances; linkage = :average)
+    merges = copy(clusters.merges)
+    heights = copy(clusters.heights)
+    order = copy(clusters.order)
+
+    reordered = reorder_hclust(clusters, [4, 3, 2, 1])
+
+    # The input is left as it was.
+    @test clusters.merges == merges
+    @test clusters.heights == heights
+    @test clusters.order == order
+
+    # The result is an independent, valid tree.
+    @test reordered.merges !== clusters.merges
+    @test reordered.heights !== clusters.heights
+    @test reordered.order == walked_leaves(reordered)
+    @test reordered.order == [4, 3, 2, 1]
+    @test reordered.heights == heights
+    @test reordered.linkage == clusters.linkage
+end
+
+@testset "reorder_hclust!single" begin
+    clusters = hclust(zeros(1, 1))
+    reordered = reorder_hclust(clusters, [1])
+    @test reordered.order == [1]
+    @test size(reordered.merges, 1) == 0
+end
