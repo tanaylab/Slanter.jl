@@ -1,7 +1,9 @@
 using JET
+using TOML
 
 push!(LOAD_PATH, ".")
 
-using Slanter
+PACKAGE_NAME = TOML.parsefile("Project.toml")["name"]
+@eval using $(Symbol(PACKAGE_NAME))
 
-println(report_package("Slanter"))
+println(report_package(PACKAGE_NAME))

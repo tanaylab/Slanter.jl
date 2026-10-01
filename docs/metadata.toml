@@ -1,0 +1,3 @@
+# The package-specific documentation settings, read by `deps/document.jl`.
+
+pages = ["index.md"]
