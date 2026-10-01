@@ -34,7 +34,8 @@ import Clustering.WardDistance  # NOLINT
 ## This modifies the `Hclust` in-place, instead of the normal API of  `orderbranches_...`,
 ## because we
 function orderbranches_bypositions!(hmer::HclustMerges, positions::AbstractVector{<:Real})::Nothing
-    node_summaries = Vector{Tuple{Float64, Int}}(undef, nnodes(hmer) - 1)  # sum and num of positions of leaves of each node
+    # Sum and num of positions of leaves of each node.
+    node_summaries = Vector{Tuple{Float64, Int}}(undef, nnodes(hmer) - 1)
 
     for v in 1:(nnodes(hmer) - 1)
         @inbounds vl = hmer.mleft[v]
@@ -544,14 +545,14 @@ end
 Enhanced [hclust]*https://github.com/JuliaStats/Clustering.jl/blob/master/src/hclust.jl).
 This is similar to `hclust` with the following extensions:
 
-  - If `branchorder` is a vector of `Real` numbers, one per leaf, then we reorder the branches so that each leaf position
-    would be as close as possible to its `branchorder` value. Technically we compute a center of gravity for each node and
-    reorder the tree such that that at each branch, the left sub-tree center of gravity is to the left (lower than) the
-    center of gravity of the right sub-tree.
-  - If `order` is specified, it must be a permutation of the 1:N leaf indices. This will be the final order of the result;
-    that is, we constrain the tree so that each node covers a continuous range of leaves (by this order). If you specify
-    an explicit `branchorder`, this will rotate some nodes so the result will no longer be in the specified order, but
-    the tree is still constrained as above.
+  - If `branchorder` is a vector of `Real` numbers, one per leaf, then we reorder the branches so that each leaf
+    position would be as close as possible to its `branchorder` value. Technically we compute a center of gravity for
+    each node and reorder the tree such that that at each branch, the left sub-tree center of gravity is to the left
+    (lower than) the center of gravity of the right sub-tree.
+  - If `order` is specified, it must be a permutation of the 1:N leaf indices. This will be the final order of the
+    result; that is, we constrain the tree so that each node covers a continuous range of leaves (by this order). If you
+    specify an explicit `branchorder`, this will rotate some nodes so the result will no longer be in the specified
+    order, but the tree is still constrained as above.
   - If `groups` is a vector of strings, then we first cluster all the entries for each group together, then combine the
     results. This is mutually exclusive with specifying an `order`.
   - If `groups` is a vector of integers, they are expected to cover a range 1:N. We again cluster each group separately,

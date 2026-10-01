@@ -243,7 +243,8 @@ Given a matrix expressing the cross-similarity between two (possibly different) 
 
 # Parameters
 
-  - `data`: A rectangular matrix to reorder, of non-negative values (unless `order_data` is specified, or `squared_order`)).
+  - `data`: A rectangular matrix to reorder, of non-negative values (unless `order_data` is specified, or
+    `squared_order`)).
   - `order_data`: An optional matrix of non-negative values of the same size to use for computing the orders (may be
     negative if `squared_order`).
   - `order_rows`: Whether to reorder the rows.
