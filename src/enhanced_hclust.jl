@@ -344,7 +344,7 @@ function place_subgroups(
     n_groups::Integer,
 )::Nothing where {T <: Real}
     for group_index in 1:n_groups
-        grouped_clustering(dd, htre, metric, group_index_of_tree, group_index)  # NOJET
+        grouped_clustering(dd, htre, metric, group_index_of_tree, group_index)
     end
     return nothing
 end
@@ -395,7 +395,7 @@ function collapse_subgroups(
     # exactly one tree per subgroup.
     subgroup_index_of_tree = subgroup_index_per_entry
     for subgroup_index in 1:n_subgroups
-        grouped_clustering(dd, htre, metric, subgroup_index_of_tree, subgroup_index)  # NOJET
+        grouped_clustering(dd, htre, metric, subgroup_index_of_tree, subgroup_index)
     end
 
     # Collapse the trees of the subgroups of each group into a single tree, the same way. Numbered subgroups are placed
@@ -444,7 +444,7 @@ function hclust_grouped(
     n_groups = maximum(groups)
     group_of_tree = copyto!(Vector{Int}(undef, length(groups)), groups)
     for group_index in 1:n_groups
-        grouped_clustering(dd, htre, metric, group_of_tree, group_index)  # NOJET
+        grouped_clustering(dd, htre, metric, group_of_tree, group_index)
     end
 
     position_of_tree = group_of_tree
