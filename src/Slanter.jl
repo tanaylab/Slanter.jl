@@ -67,162 +67,187 @@ function slanted_orders(
     max_spin_count::Integer = 10,
 )::Tuple{AbstractVector{<:Integer}, AbstractVector{<:Integer}}
     @assert !same_order || (order_rows && order_cols)
+    @assert !same_order || size(data, 1) == size(data, 2)
 
-    rows_count, cols_count = size(data)
-
-    row_indices = collect(1:rows_count)
-    col_indices = collect(1:cols_count)
-
-    best_rows_permutation = copy(row_indices)
-    best_cols_permutation = copy(col_indices)
-
-    if same_order
-        @assert rows_count == cols_count
-        permutation = copy(row_indices)
-    end
+    best_rows_permutation = collect(1:size(data, 1))
+    best_cols_permutation = collect(1:size(data, 2))
 
     if order_rows || order_cols
-        if squared_order
-            data = data .* data
-        end
-        @assert minimum(data) >= 0
+        squared_data = squared_order ? data .* data : data
+        @assert minimum(squared_data) >= 0
 
-        function reorder_phase()
-            rows_permutation = copy(best_rows_permutation)
-            cols_permutation = copy(best_cols_permutation)
-            spinning_rows_count = 0
-            spinning_cols_count = 0
-            spinning_same_count = 0
-            was_changed = true
-            error_rows = nothing
-            error_cols = nothing
-            error_same = nothing
-
-            while was_changed
-                was_changed = false
-                ideal_index = nothing
-
-                if order_rows
-                    # For each row, compute its ideal index based on weighted average
-                    sum_indexed_rows = vec(sum(data .* transpose(col_indices); dims = 2))
-                    sum_squared_rows = vec(sum(data; dims = 2))
-                    sum_squared_rows[sum_squared_rows .<= 0] .= 1
-                    ideal_row_index = sum_indexed_rows ./ sum_squared_rows
-
-                    if same_order
-                        ideal_index = ideal_row_index
-                    else
-                        ideal_row_index = ideal_row_index .* (rows_count / cols_count)
-                        new_rows_permutation = sortperm(ideal_row_index)
-                        error = new_rows_permutation .- ideal_row_index
-                        new_error_rows = sum(error .* error)
-                        new_changed = any(new_rows_permutation .!= row_indices)
-
-                        if isnothing(error_rows) || new_error_rows < error_rows
-                            error_rows = new_error_rows
-                            spinning_rows_count = 0
-                            best_rows_permutation = rows_permutation[new_rows_permutation]
-                        else
-                            spinning_rows_count += 1
-                        end
-
-                        if new_changed && spinning_rows_count < max_spin_count
-                            was_changed = true
-                            data = data[new_rows_permutation, :]
-                            rows_permutation = rows_permutation[new_rows_permutation]
-                            row_indices = collect(1:rows_count)  # Reset row indices
-                        end
-                    end
-                end
-
-                if order_cols
-                    # For each column, compute its ideal index based on weighted average
-                    sum_indexed_cols = vec(sum(data .* row_indices; dims = 1))
-                    sum_squared_cols = vec(sum(data; dims = 1))
-                    sum_squared_cols[sum_squared_cols .<= 0] .= 1
-                    ideal_col_index = sum_indexed_cols ./ sum_squared_cols
-
-                    if same_order
-                        ideal_index = (ideal_index + ideal_col_index) ./ 2
-                    else
-                        ideal_col_index = ideal_col_index .* (cols_count / rows_count)
-                        new_cols_permutation = sortperm(ideal_col_index)
-                        error = new_cols_permutation .- ideal_col_index
-                        new_error_cols = sum(error .* error)
-                        new_changed = any(new_cols_permutation .!= col_indices)
-
-                        if isnothing(error_cols) || new_error_cols < error_cols
-                            error_cols = new_error_cols
-                            spinning_cols_count = 0
-                            best_cols_permutation = cols_permutation[new_cols_permutation]
-                        else
-                            spinning_cols_count += 1
-                        end
-
-                        if new_changed && spinning_cols_count < max_spin_count
-                            was_changed = true
-                            data = data[:, new_cols_permutation]
-                            cols_permutation = cols_permutation[new_cols_permutation]
-                            col_indices = collect(1:cols_count)  # Reset col indices
-                        end
-                    end
-                end
-
-                if !isnothing(ideal_index)
-                    new_permutation = sortperm(ideal_index)
-                    error = new_permutation .- ideal_index
-                    new_error_same = sum(error .* error)
-                    new_changed = any(new_permutation .!= row_indices)
-
-                    if isnothing(error_same) || new_error_same < error_same
-                        error_same = new_error_same
-                        spinning_same_count = 0
-                        best_permutation = permutation[new_permutation]
-                        best_rows_permutation = best_permutation
-                        best_cols_permutation = best_permutation
-                    else
-                        spinning_same_count += 1
-                    end
-
-                    if new_changed && spinning_same_count < max_spin_count
-                        was_changed = true
-                        data = data[new_permutation, new_permutation]
-                        permutation = permutation[new_permutation]
-                        rows_permutation = permutation
-                        cols_permutation = permutation
-                        row_indices = collect(1:rows_count)  # Reset row indices
-                        col_indices = collect(1:cols_count)  # Reset col indices
-                    end
-                end
-            end
-        end
-
-        reorder_phase()
+        best_rows_permutation, best_cols_permutation = reorder_phase(
+            squared_data,
+            best_rows_permutation,
+            best_cols_permutation;
+            order_rows,
+            order_cols,
+            same_order,
+            max_spin_count,
+        )
 
         if discount_outliers
-            data = data[best_rows_permutation, best_cols_permutation]
-
-            # Create matrices of indices for easy distance calculation
-            row_indices_matrix = repeat(row_indices, 1, cols_count)
-            col_indices_matrix = transpose(repeat(col_indices, 1, rows_count))
-
-            rows_per_col = rows_count / cols_count
-            cols_per_row = cols_count / rows_count
-
-            ideal_row_indices_matrix = col_indices_matrix .* rows_per_col
-            ideal_col_indices_matrix = row_indices_matrix .* cols_per_row
-
-            row_distance_matrix = row_indices_matrix .- ideal_row_indices_matrix
-            col_distance_matrix = col_indices_matrix .- ideal_col_indices_matrix
-
-            weight_matrix = (1 .+ abs.(row_distance_matrix)) .* (1 .+ abs.(col_distance_matrix))
-            data = data ./ weight_matrix
-
-            reorder_phase()
+            best_rows_permutation, best_cols_permutation = reorder_phase(
+                discounted_outliers(squared_data[best_rows_permutation, best_cols_permutation]),
+                best_rows_permutation,
+                best_cols_permutation;
+                order_rows,
+                order_cols,
+                same_order,
+                max_spin_count,
+            )
         end
     end
 
     return (best_rows_permutation, best_cols_permutation)
+end
+
+# Reorder the rows and/or columns of the `data`, which is in the order of the `base_rows_permutation` and the
+# `base_cols_permutation`. Return the best orders found, as permutations of the original order.
+function reorder_phase(
+    data::AbstractMatrix{<:Real},
+    base_rows_permutation::AbstractVector{<:Integer},
+    base_cols_permutation::AbstractVector{<:Integer};
+    order_rows::Bool,
+    order_cols::Bool,
+    same_order::Bool,
+    max_spin_count::Integer,
+)::Tuple{AbstractVector{<:Integer}, AbstractVector{<:Integer}}
+    rows_count, cols_count = size(data)
+    row_indices = collect(1:rows_count)
+    col_indices = collect(1:cols_count)
+    best_rows_permutation = base_rows_permutation
+    best_cols_permutation = base_cols_permutation
+    permutation = copy(base_rows_permutation)
+    rows_permutation = copy(base_rows_permutation)
+    cols_permutation = copy(base_cols_permutation)
+    spinning_rows_count = 0
+    spinning_cols_count = 0
+    spinning_same_count = 0
+    was_changed = true
+    error_rows = nothing
+    error_cols = nothing
+    error_same = nothing
+
+    while was_changed
+        was_changed = false
+        ideal_index = nothing
+
+        if order_rows
+            # For each row, compute its ideal index based on weighted average
+            sum_indexed_rows = vec(sum(data .* transpose(col_indices); dims = 2))
+            sum_squared_rows = vec(sum(data; dims = 2))
+            sum_squared_rows[sum_squared_rows .<= 0] .= 1
+            ideal_row_index = sum_indexed_rows ./ sum_squared_rows
+
+            if same_order
+                ideal_index = ideal_row_index
+            else
+                ideal_row_index = ideal_row_index .* (rows_count / cols_count)
+                new_rows_permutation = sortperm(ideal_row_index)
+                error = new_rows_permutation .- ideal_row_index
+                new_error_rows = sum(error .* error)
+                new_changed = any(new_rows_permutation .!= row_indices)
+
+                if isnothing(error_rows) || new_error_rows < error_rows
+                    error_rows = new_error_rows
+                    spinning_rows_count = 0
+                    best_rows_permutation = rows_permutation[new_rows_permutation]
+                else
+                    spinning_rows_count += 1
+                end
+
+                if new_changed && spinning_rows_count < max_spin_count
+                    was_changed = true
+                    data = data[new_rows_permutation, :]
+                    rows_permutation = rows_permutation[new_rows_permutation]
+                    row_indices = collect(1:rows_count)  # Reset row indices
+                end
+            end
+        end
+
+        if order_cols
+            # For each column, compute its ideal index based on weighted average
+            sum_indexed_cols = vec(sum(data .* row_indices; dims = 1))
+            sum_squared_cols = vec(sum(data; dims = 1))
+            sum_squared_cols[sum_squared_cols .<= 0] .= 1
+            ideal_col_index = sum_indexed_cols ./ sum_squared_cols
+
+            if same_order
+                ideal_index = (ideal_index + ideal_col_index) ./ 2
+            else
+                ideal_col_index = ideal_col_index .* (cols_count / rows_count)
+                new_cols_permutation = sortperm(ideal_col_index)
+                error = new_cols_permutation .- ideal_col_index
+                new_error_cols = sum(error .* error)
+                new_changed = any(new_cols_permutation .!= col_indices)
+
+                if isnothing(error_cols) || new_error_cols < error_cols
+                    error_cols = new_error_cols
+                    spinning_cols_count = 0
+                    best_cols_permutation = cols_permutation[new_cols_permutation]
+                else
+                    spinning_cols_count += 1
+                end
+
+                if new_changed && spinning_cols_count < max_spin_count
+                    was_changed = true
+                    data = data[:, new_cols_permutation]
+                    cols_permutation = cols_permutation[new_cols_permutation]
+                    col_indices = collect(1:cols_count)  # Reset col indices
+                end
+            end
+        end
+
+        if !isnothing(ideal_index)
+            new_permutation = sortperm(ideal_index)
+            error = new_permutation .- ideal_index
+            new_error_same = sum(error .* error)
+            new_changed = any(new_permutation .!= row_indices)
+
+            if isnothing(error_same) || new_error_same < error_same
+                error_same = new_error_same
+                spinning_same_count = 0
+                best_permutation = permutation[new_permutation]
+                best_rows_permutation = best_permutation
+                best_cols_permutation = best_permutation
+            else
+                spinning_same_count += 1
+            end
+
+            if new_changed && spinning_same_count < max_spin_count
+                was_changed = true
+                data = data[new_permutation, new_permutation]
+                permutation = permutation[new_permutation]
+                rows_permutation = permutation
+                cols_permutation = permutation
+                row_indices = collect(1:rows_count)  # Reset row indices
+                col_indices = collect(1:cols_count)  # Reset col indices
+            end
+        end
+    end
+    return (best_rows_permutation, best_cols_permutation)
+end
+
+# The `data` divided by the distance of each entry from the diagonal, which discounts the outliers far from it.
+function discounted_outliers(data::AbstractMatrix{<:Real})::AbstractMatrix{<:Real}
+    rows_count, cols_count = size(data)
+
+    # Create matrices of indices for easy distance calculation
+    row_indices_matrix = repeat(collect(1:rows_count), 1, cols_count)
+    col_indices_matrix = transpose(repeat(collect(1:cols_count), 1, rows_count))
+
+    rows_per_col = rows_count / cols_count
+    cols_per_row = cols_count / rows_count
+
+    ideal_row_indices_matrix = col_indices_matrix .* rows_per_col
+    ideal_col_indices_matrix = row_indices_matrix .* cols_per_row
+
+    row_distance_matrix = row_indices_matrix .- ideal_row_indices_matrix
+    col_distance_matrix = col_indices_matrix .- ideal_col_indices_matrix
+
+    weight_matrix = (1 .+ abs.(row_distance_matrix)) .* (1 .+ abs.(col_distance_matrix))
+    return data ./ weight_matrix
 end
 
 """
